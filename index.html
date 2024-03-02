@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-to-Speech Reader</title>
+</head>
+<body>
+    <h1>Text-to-Speech Reader</h1>
+    <div id="content"></div>
+    <button onclick="readText()">Read</button>
+
+    <script>
+        function readText() {
+            var content = document.getElementById('content');
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'book.txt', true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var text = xhr.responseText;
+                    content.textContent = text;
+
+                    // Create SpeechSynthesisUtterance object
+                    var speech = new SpeechSynthesisUtterance();
+                    speech.text = text;
+
+                    // Set voice
+                    speechSynthesis.getVoices().forEach(function(voice) {
+                        if (voice.name == 'Google UK English Male') {
+                            speech.voice = voice;
+                        }
+                    });
+
+                    // Speak the text
+                    speechSynthesis.speak(speech);
+                }
+            };
+            xhr.send();
+        }
+    </script>
+</body>
+</html>
